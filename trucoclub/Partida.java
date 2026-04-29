@@ -251,32 +251,25 @@ public class Partida {
         System.out.println("📣 " + elQueCanta.getNombre() + " gritó " + tipoGrito.toUpperCase());
     }
 
-    public void irseAlMazo(Jugador j) {
-        if (estadoActual == EstadoJuego.TERMINADO) {
-            System.out.println("La partida ya terminó. No se pueden realizar más acciones.");
-            return;
-        }
-        if (estadoActual == EstadoJuego.TERMINADO)
-            return;
+  public void irseAlMazo(Jugador j) {
+    if (estadoActual == EstadoJuego.TERMINADO)
+        return;
 
-        Jugador ganador = (j == jugador1) ? jugador2 : jugador1;
-        int puntosACobrar;
+    Jugador ganador = (j == jugador1) ? jugador2 : jugador1;
+    int puntosACobrar;
 
-        // Si nadie tiró cartas todavía (cartasEnMesa está vacía y es la mano 1)
-        if (manoActual == 1 && cartasEnMesa.isEmpty()) {
-            puntosACobrar = 2;
-            System.out.println("🏳️ " + j.getNombre() + " se fue al mazo antes de jugar. Penalidad: 2 puntos.");
-        } else {
-            // Si ya se jugó al menos una carta o estamos en manos posteriores
-            // Se cobra lo que valía el truco (mínimo 1)
-            puntosACobrar = puntosEnJuegoTruco;
-            System.out
-                    .println("🏳️ " + j.getNombre() + " se fue al mazo. El rival gana " + puntosACobrar + " punto/s.");
-        }
-
-        // Finalizamos la ronda con los puntos correspondientes
-        finalizarRonda(ganador, puntosACobrar);
+    // Si el envido ya se cerró, aunque la mesa esté vacía, se cobra solo 1 punto (o lo que valga el truco).
+    if (manoActual == 1 && cartasEnMesa.isEmpty() && !this.envidoCerrado) {
+        puntosACobrar = 2;
+        System.out.println("🏳️ " + j.getNombre() + " se fue al mazo antes de jugar. Penalidad: 2 puntos.");
+    } else {
+        // Si ya se jugó una carta O el envido ya pasó, cobramos el valor del truco
+        puntosACobrar = puntosEnJuegoTruco; 
+        System.out.println("🏳️ " + j.getNombre() + " se fue al mazo. El rival gana " + puntosACobrar + " punto/s.");
     }
+
+    finalizarRonda(ganador, puntosACobrar);
+}
 
     // --- MÉTODO UNIFICADO DE RESPUESTA ---
     public void responder(Jugador j, String respuesta) {
